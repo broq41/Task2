@@ -1,0 +1,9 @@
+file:
+  entity:
+    file: Dodaj plik
+
+
+  actions:
+    new: Dodaj
+    hide: Ukryj
+    show: Pokaż

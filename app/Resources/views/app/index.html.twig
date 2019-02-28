@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% if people.0 is defined %}
+        <div class="container-fluid">
+        <div class="col-md-12">
+        <div class="text-center">
+            <a class="btn btn-primary" href="{{ path('new_file') }}">Dodaj plik csv </a>
+        </div>
+
+        <canvas id="bar-chart" width="800" height="2000"></canvas>
+
+    {% else %}
+        <div class="text-center">
+            <h1>Brak danych, dodaj je :</h1>
+            <a class="btn btn-primary" href="{{ path('new_file') }}">Dodaj plik csv </a>
+        </div>
+
+    {% endif %}
+
+    </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block javascripts %}
+    <script src="/js/Chart.min.js">
+    </script>
+
+    <script>
+        var data = {{ people|json_encode|raw }}
+        var labels = {{ labels|json_encode|raw }}
+        var colors = {{ colors|json_encode|raw }}
+
+            new Chart(document.getElementById("bar-chart"), {
+                type: 'horizontalBar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Liczba osób",
+                            backgroundColor: colors,
+                            data: data
+                        }
+                    ]
+                },
+                options: {
+                    legend: {display: false},
+                    title: {
+                        display: true,
+                        text: 'Liczba osób z każdego kraju'
+                    }
+                }
+            });
+    </script>
+{% endblock %}
