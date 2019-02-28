@@ -28,6 +28,7 @@ class AppController extends Controller
         $colors = [];
 
         foreach ($people as $person){
+
             $data[] = $person->getCount();
             $labels[] = $person->getCountry();
             $colors[] = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
@@ -41,7 +42,6 @@ class AppController extends Controller
      */
     public function newFileAction(Request $request)
     {
-
         /** @var File $file */
         $file = new File();
 
@@ -60,7 +60,20 @@ class AppController extends Controller
         $file = $request->files->get('new_file');
 
         if(!empty($file['file'])){
+
             $pathName = $file['file']->getPathName();
+
+            $fileType = $file['file']->getMimeType();
+
+            if($fileType !== 'text/plain' && $fileType !== 'text/csv'){
+
+                $this->addFlash(
+                    'warning',
+                    'Please put .csv file'
+                );
+
+                return $this->redirectToRoute('new_file');
+            }
         }
 
         if(!empty($pathName)){
@@ -72,7 +85,6 @@ class AppController extends Controller
 
             $processManager = $this->get(ProcessManager::class);
             $processManager->processCSV($handle);
-
         }
 
         return $this->redirectToRoute('homepage');
